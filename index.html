@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700');
+body {
+  font-family: 'Noto Sans', sans-serif;
+  background-color: black;
+  color: white;
+}
+</style>
+
+<script
+  src="https://code.jquery.com/jquery-3.7.0.slim.min.js"
+  integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE="
+  crossorigin="anonymous">
+</script>
+
+<script lang="javascript">
+$(function() {
+
+    var newbuttons = `
+      <button type="button" id="accept" onclick="accept()">Accept Gift</button>
+      <button type="button" id="giveback" onclick="giveback()">Give Back</button>
+      <button type="button" id="brought" onclick="brought()">Brought Prize</button>
+    `;
+
+    class Attendee {
+      constructor(num) {
+        this.num = num;
+        this.stat = '';
+      }
+    }
+
+    var attendees = [];
+
+    var next = function(brought=undefined) {
+
+        var nothing = attendees.filter(function(x) {
+            return x.stat == '' && ( x.num != brought );
+        });
+
+        if (nothing.length == 0) {
+            $('#accept').hide();
+            $('#giveback').hide();
+            $('#brought').hide();
+            $('#next').text('no more attendees');
+            $('#results').append('<tr><td>' + new Date().getTime() + '<td>no more attendees');
+            return;
+        }
+
+        var pick = Math.floor(Math.random() * (nothing.length - 1));
+
+        $('#next').text('next winner is ' + nothing[pick].num);
+      $('#results').append('<tr><td>' + new Date().getTime() + '<td>next winner is ' + nothing[pick].num);
+
+        nothing[pick].stat = 'pending';
+
+    }
+
+    window.start = function() {
+        $('#attendees').prop('disabled', true);
+        $('#start').hide();
+
+        for (var i = 1; i <= $('#attendees').val(); i++) {
+          attendees.push(new Attendee(i));
+        }
+
+        $('#result').append(newbuttons);
+
+        next();
+    }
+
+    window.accept = function() {
+
+      attendees.filter(function(x) {
+          return x.stat == 'pending';
+      }).at(0).stat = 'ACCEPTED';
+
+      $('#results').append('<tr><td>' + new Date().getTime() + '<td> - accepted');
+
+      next();
+    }
+
+    window.giveback = function() {
+
+      attendees.filter(function(x) {
+          return x.stat == 'pending';
+      }).at(0).stat = 'PASSED';
+
+      $('#results').append('<tr><td>' + new Date().getTime() + '<td> - gave back');
+
+      next();
+    }
+
+    window.brought = function() {
+
+      var selected = attendees.filter(function(x) {
+          return x.stat == 'pending';
+      }).at(0);
+      selected.stat = '';
+
+      $('#results').append('<tr><td>' + new Date().getTime() + '<td> - brought');
+
+      next(selected.num);
+    }
+
+});
+</script>
+
+<h1>Door Prize</h1>
+
+<label for="attendees">How many attendees?</label>
+<input type="number" id="attendees" name="attendees" min="1" value="1">
+
+<button type="button" id="start" onclick="start()">
+  Get started
+</button>
+
+<p id="next">
+
+<div id="result">
+</div>
+
+<details>
+  <summary>Click for full log</summary>
+  <table id="results">
+    <thead>
+      <tr><th>Timestamp<th>Log
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</details>
