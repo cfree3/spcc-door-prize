@@ -6,6 +6,46 @@ body {
   font-family: 'Noto Sans', sans-serif;
   background-color: black;
   color: white;
+  text-align: center;
+}
+#next {
+  font-weight: bold;
+}
+#details {
+  display: none;
+  padding-top: 2em;
+}
+#winner {
+  font-size: 3em;
+}
+input {
+  margin: 0.5em;
+  padding: 0.5em;
+  font-size: 1em;
+  width: 30%;
+  border-radius: 5px;
+}
+button {
+  margin: 0.5em;
+  padding: 0.5em;
+  font-size: 1em;
+  width: 30%;
+  border: none;
+  border-radius: 5px;
+}
+#accept {
+  color: white;
+  background-color: green;
+}
+#pass {
+  background-color: orange;
+}
+#brought {
+  background-color: grey;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
 
@@ -19,8 +59,10 @@ body {
 $(function() {
 
     var newbuttons = `
-      <button type="button" id="accept" onclick="accept()">Accept Gift</button>
-      <button type="button" id="giveback" onclick="giveback()">Give Back</button>
+      <button type="button" id="accept" onclick="accept()">Accept</button>
+      <br/>
+      <button type="button" id="pass" onclick="pass()">Pass</button>
+      <br/>
       <button type="button" id="brought" onclick="brought()">Brought Prize</button>
     `;
 
@@ -41,17 +83,18 @@ $(function() {
 
         if (nothing.length == 0) {
             $('#accept').hide();
-            $('#giveback').hide();
+            $('#pass').hide();
             $('#brought').hide();
-            $('#next').text('no more attendees');
-            $('#results').append('<tr><td>' + new Date().getTime() + '<td>no more attendees');
+            $('#next').text('No more attendees!');
+            $('#log').append('<tr><td>' + new Date().getTime() + '<td>no more attendees');
             return;
         }
 
         var pick = Math.floor(Math.random() * (nothing.length - 1));
 
-        $('#next').text('next winner is ' + nothing[pick].num);
-      $('#results').append('<tr><td>' + new Date().getTime() + '<td>next winner is ' + nothing[pick].num);
+        $('#next').text('Next winner is...')
+        $('#next').append('<br/><span id="winner">' + nothing[pick].num);
+        $('#log').append('<tr><td>' + new Date().getTime() + '<td>Chose ' + nothing[pick].num);
 
         nothing[pick].stat = 'pending';
 
@@ -59,35 +102,43 @@ $(function() {
 
     window.start = function() {
         $('#attendees').prop('disabled', true);
-        $('#start').hide();
+        $('#initialize').hide();
 
         for (var i = 1; i <= $('#attendees').val(); i++) {
           attendees.push(new Attendee(i));
+          $('#results').append('<tr><td>' + i + '<td id="result_' + i + '">');
         }
 
         $('#result').append(newbuttons);
+        $('#details').show();
 
         next();
     }
 
     window.accept = function() {
 
-      attendees.filter(function(x) {
+      var attendee = attendees.filter(function(x) {
           return x.stat == 'pending';
-      }).at(0).stat = 'ACCEPTED';
+      }).at(0);
 
-      $('#results').append('<tr><td>' + new Date().getTime() + '<td> - accepted');
+      attendee.stat = 'ACCEPTED';
+      $('#result_' + attendee.num).text('Accepted');
+
+      $('#log').append('<tr><td>' + new Date().getTime() + '<td>Accepted');
 
       next();
     }
 
-    window.giveback = function() {
+    window.pass = function() {
 
-      attendees.filter(function(x) {
+      var attendee = attendees.filter(function(x) {
           return x.stat == 'pending';
-      }).at(0).stat = 'PASSED';
+      }).at(0);
 
-      $('#results').append('<tr><td>' + new Date().getTime() + '<td> - gave back');
+      attendee.stat = 'PASSED';
+      $('#result_' + attendee.num).text('Passed');
+
+      $('#log').append('<tr><td>' + new Date().getTime() + '<td>Passed');
 
       next();
     }
@@ -99,7 +150,7 @@ $(function() {
       }).at(0);
       selected.stat = '';
 
-      $('#results').append('<tr><td>' + new Date().getTime() + '<td> - brought');
+      $('#log').append('<tr><td>' + new Date().getTime() + '<td>Brought Prize');
 
       next(selected.num);
     }
@@ -109,25 +160,40 @@ $(function() {
 
 <h1>Door Prize</h1>
 
-<label for="attendees">How many attendees?</label>
-<input type="number" id="attendees" name="attendees" min="1" value="1">
-
-<button type="button" id="start" onclick="start()">
-  Get started
-</button>
+<div id="initialize">
+  <label for="attendees">How many attendees?</label>
+  <br/>
+  <input type="number" id="attendees" name="attendees" min="1" value="1">
+  <br/>
+  <button type="button" id="start" onclick="start()">
+    Let's go!
+  </button>
+</div>
 
 <p id="next">
 
 <div id="result">
 </div>
 
-<details>
-  <summary>Click for full log</summary>
-  <table id="results">
-    <thead>
-      <tr><th>Timestamp<th>Log
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-</details>
+<div id="details">
+  <details>
+    <summary>Results</summary>
+    <table id="results">
+      <thead>
+        <tr><th>Number<th>Result
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </details>
+  <details>
+    <summary>Log</summary>
+    <table id="log">
+      <thead>
+        <tr><th>Timestamp<th>Log
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </details>
+</div>
