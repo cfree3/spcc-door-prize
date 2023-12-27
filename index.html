@@ -1,52 +1,69 @@
 <!DOCTYPE html>
 
+<!--
+
+  This webpage HTML is no work of art; but it was crafted, and then hacked
+  upon, to serve a purpose.
+
+    ¯\_(ツ)_/¯
+
+-->
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700');
-body {
-  font-family: 'Noto Sans', sans-serif;
-  background-color: black;
-  color: white;
-  text-align: center;
-}
-#next {
-  font-weight: bold;
-}
-#details {
-  display: none;
-  padding-top: 2em;
-}
-#winner {
-  font-size: 3em;
-}
-input {
-  margin: 0.5em;
-  padding: 0.5em;
-  font-size: 1em;
-  width: 30%;
-  border-radius: 5px;
-}
-button {
-  margin: 0.5em;
-  padding: 0.5em;
-  font-size: 1em;
-  width: 30%;
-  border: none;
-  border-radius: 5px;
-}
-#accept {
-  color: white;
-  background-color: green;
-}
-#pass {
-  background-color: orange;
-}
-#brought {
-  background-color: grey;
-}
-table {
-  margin-left: auto;
-  margin-right: auto;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700');
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-size: 4em;
+  }
+  a,a:visited {
+    color: white;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  #next {
+    font-weight: bold;
+  }
+  #details {
+    display: none;
+    padding-top: 2em;
+  }
+  #winner {
+    font-size: 3em;
+  }
+  input {
+    margin: 0.5em;
+    padding: 0.5em;
+    font-size: 1em;
+    width: 80%;
+    border-radius: 5px;
+  }
+  button {
+    margin: 0.5em;
+    padding: 0.5em;
+    font-size: 1em;
+    width: 80%;
+    border: none;
+    border-radius: 5px;
+  }
+  #accept {
+    color: white;
+    background-color: green;
+  }
+  #pass {
+    background-color: orange;
+  }
+  #brought {
+    background-color: grey;
+  }
+  table {
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 
 <script
@@ -158,7 +175,7 @@ $(function() {
 });
 </script>
 
-<h1>Door Prize</h1>
+<h1><a href="https://sepencollectors.com">SPCC</a> Door Prize</h1>
 
 <div id="initialize">
   <label for="attendees">How many attendees?</label>
