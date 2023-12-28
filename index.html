@@ -132,7 +132,7 @@ $(function() {
             return;
         }
 
-        var pick = Math.floor(Math.random() * (nothing.length - 1));
+        var pick = Math.floor(Math.random() * nothing.length);
 
         if (!$.trim($('#next').text())) { // if (effectively) empty, this is the first winner
           $('#next').text('First')
