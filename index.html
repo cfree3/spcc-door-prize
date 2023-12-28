@@ -160,6 +160,11 @@ $(function() {
 
         passdisq = $('#passdisq').is(':checked');
 
+        $('#log').append('<tr><td>' + new Date().getTime() + '<td>Started');
+        if (passdisq) {
+          $('#log').append('<tr><td>' + new Date().getTime() + '<td>Passing Disqualifies');
+        }
+
         next();
     }
 
