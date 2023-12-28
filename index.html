@@ -195,14 +195,14 @@ $(function() {
 
     window.brought = function() {
 
-        var selected = attendees.filter(function(x) {
+        var attendee = attendees.filter(function(x) {
             return x.stat == 'PENDING';
         }).at(0);
-        selected.stat = '';
+        attendee.stat = '';
 
         $('#log').append('<tr><td>' + new Date().getTime() + '<td>Brought Prize');
 
-        next(selected.num);
+        next(attendee.num);
     }
 
 });
