@@ -193,6 +193,8 @@ $(function() {
           $('#result_' + attendee.num).text('Passed');
         } else {
           attendee.stat = '';
+          // may get chosen again, but avoiding anyone who has passed on a
+          // particular gift would require much more state tracking
         }
 
         $('#log').append('<tr><td>' + new Date().getTime() + '<td>Passed');
