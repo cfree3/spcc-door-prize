@@ -42,7 +42,10 @@
     padding: 0.5em;
     font-size: 1em;
     width: 80%;
-    border-radius: 5px;
+    border-radius: 0.25em;
+  }
+  input[type=checkbox] {
+    transform: scale(3);
   }
   button {
     margin: 0.5em;
@@ -50,7 +53,25 @@
     font-size: 1em;
     width: 80%;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.25em;
+  }
+  #altrules {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    margin: 1em auto 1em auto;
+    width: 80%;
+    align-items: center;
+    justify-items: start;
+  }
+  #altrules label {
+    display: inline-block;
+    font-size: 0.75em;
+    font-style: italic;
+    color: grey;
+  }
+  #altrules input {
+    margin: 0.5em 0 0.5em 0;
+    accent-color: grey;
   }
   #accept {
     color: white;
@@ -94,6 +115,8 @@ $(function() {
 
     var attendees = [];
 
+    var passdisq = false;
+
     var next = function(brought=undefined) {
 
         var nothing = attendees.filter(function(x) {
@@ -111,11 +134,15 @@ $(function() {
 
         var pick = Math.floor(Math.random() * (nothing.length - 1));
 
-        $('#next').text('Next winner is...')
-        $('#next').append('<br/><span id="winner">' + nothing[pick].num);
+        if (!$.trim($('#next').text())) { // if (effectively) empty, this is the first winner
+          $('#next').text('First')
+        } else {
+          $('#next').text('Next')
+        }
+        $('#next').append(' winner is... <br/><span id="winner">' + nothing[pick].num);
         $('#log').append('<tr><td>' + new Date().getTime() + '<td>Chose ' + nothing[pick].num);
 
-        nothing[pick].stat = 'pending';
+        nothing[pick].stat = 'PENDING';
 
     }
 
@@ -131,47 +158,51 @@ $(function() {
         $('#result').append(newbuttons);
         $('#details').show();
 
+        passdisq = $('#passdisq').is(':checked');
+
         next();
     }
 
     window.accept = function() {
 
-      var attendee = attendees.filter(function(x) {
-          return x.stat == 'pending';
-      }).at(0);
+        var attendee = attendees.filter(function(x) {
+            return x.stat == 'PENDING';
+        }).at(0);
 
-      attendee.stat = 'ACCEPTED';
-      $('#result_' + attendee.num).text('Accepted');
+        attendee.stat = 'ACCEPTED';
+        $('#result_' + attendee.num).text('Accepted');
 
-      $('#log').append('<tr><td>' + new Date().getTime() + '<td>Accepted');
+        $('#log').append('<tr><td>' + new Date().getTime() + '<td>Accepted');
 
-      next();
+        next();
     }
 
     window.pass = function() {
 
-      var attendee = attendees.filter(function(x) {
-          return x.stat == 'pending';
-      }).at(0);
+        var attendee = attendees.filter(function(x) {
+            return x.stat == 'PENDING';
+        }).at(0);
 
-      attendee.stat = 'PASSED';
-      $('#result_' + attendee.num).text('Passed');
+        if (passdisq) {
+          attendee.stat = 'PASSED';
+          $('#result_' + attendee.num).text('Passed');
+        }
 
-      $('#log').append('<tr><td>' + new Date().getTime() + '<td>Passed');
+        $('#log').append('<tr><td>' + new Date().getTime() + '<td>Passed');
 
-      next();
+        next();
     }
 
     window.brought = function() {
 
-      var selected = attendees.filter(function(x) {
-          return x.stat == 'pending';
-      }).at(0);
-      selected.stat = '';
+        var selected = attendees.filter(function(x) {
+            return x.stat == 'PENDING';
+        }).at(0);
+        selected.stat = '';
 
-      $('#log').append('<tr><td>' + new Date().getTime() + '<td>Brought Prize');
+        $('#log').append('<tr><td>' + new Date().getTime() + '<td>Brought Prize');
 
-      next(selected.num);
+        next(selected.num);
     }
 
 });
@@ -187,6 +218,11 @@ $(function() {
   <button type="button" id="start" onclick="start()">
     Let's go!
   </button>
+  <br/>
+  <div id="altrules">
+    <input type="checkbox" id="passdisq" name="passdisq" value="0">
+    <label for="passdisq">Passing Disqualifies</label>
+  </div>
 </div>
 
 <p id="next">
