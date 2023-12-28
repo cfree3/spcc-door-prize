@@ -186,6 +186,8 @@ $(function() {
         if (passdisq) {
           attendee.stat = 'PASSED';
           $('#result_' + attendee.num).text('Passed');
+        } else {
+          attendee.stat = '';
         }
 
         $('#log').append('<tr><td>' + new Date().getTime() + '<td>Passed');
