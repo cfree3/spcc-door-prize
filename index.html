@@ -77,11 +77,23 @@
     color: white;
     background-color: green;
   }
+  #accept:disabled {
+    color: grey;
+    background-color: dimgrey;
+  }
   #pass {
     background-color: orange;
   }
+  #pass:disabled {
+    color: grey;
+    background-color: dimgrey;
+  }
   #brought {
     background-color: grey;
+  }
+  #brought:disabled {
+    color: grey;
+    background-color: dimgrey;
   }
   table {
     margin-left: auto;
@@ -168,7 +180,20 @@ $(function() {
         next();
     }
 
+    // prevent the user from double-clicking accidentally or out of uncertainty
+    var disable_buttons = function() {
+        $('#accept').prop('disabled', true);
+        $('#pass').prop('disabled', true);
+        $('#brought').prop('disabled', true);
+        setTimeout(function() {
+            $('#accept').prop('disabled', false);
+            $('#pass').prop('disabled', false);
+            $('#brought').prop('disabled', false);
+        }, 350);
+    }
+
     window.accept = function() {
+        disable_buttons();
 
         var attendee = attendees.filter(function(x) {
             return x.stat == 'PENDING';
@@ -183,6 +208,7 @@ $(function() {
     }
 
     window.pass = function() {
+        disable_buttons();
 
         var attendee = attendees.filter(function(x) {
             return x.stat == 'PENDING';
@@ -203,6 +229,7 @@ $(function() {
     }
 
     window.brought = function() {
+        disable_buttons();
 
         var attendee = attendees.filter(function(x) {
             return x.stat == 'PENDING';
